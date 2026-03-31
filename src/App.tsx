@@ -1,4 +1,4 @@
-import ProductList from "../features/product/components/ProductList";
+import ProductList from "./features/product/components/ProductList";
 import "./App.css";
 
 function App() {
