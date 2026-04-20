@@ -1,36 +1,29 @@
-import useFilterProducts from "../hooks/useFilterProducts";
 import useProducts from "../hooks/useProducts";
+import ProductCard from "./ProductCard";
 
-export default function ProductList() {
+interface Props {
+  search: string;
+}
+
+export default function ProductList({ search }: Props) {
   const { products, loading } = useProducts();
-  const { filterProducts } = useFilterProducts();
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+
+  const filtered = products.filter((p) =>
+    p.productName.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <main className="bg-blue-600">
-      {products.map((product) => (
-        <>
-          <div key={product.id}>
-            <p>Nome do produto:{product.productName}</p>
-            <p>Preço:{product.price}</p>
-            <p>Categoria:{product.category}</p>
-          </div>
-          <br />
-        </>
-      ))}
-      <h2 className="bg-yellow-600">Produtos filtrados por Tech</h2>
-      {filterProducts.map((filterProduct) => (
-        <>
-          <div key={filterProduct.id}>
-            <p>Nome do produto:{filterProduct.productName}</p>
-            <p>Preço:{filterProduct.price}</p>
-            <p>Categoria:{filterProduct.category}</p>
-          </div>
-        </>
-      ))}
+    <main className="p-4 flex flex-col gap-8">
+      <section>
+        <h2 className="text-xl font-bold mb-4">Todos os Produtos</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((product) => (
+            <ProductCard key={product.id} {...product} />
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
