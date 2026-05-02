@@ -26,19 +26,21 @@ beforeEach(() => {
 // --- Unitário ---
 
 describe("useProducts — unitário", () => {
-  it("inicia com products vazio e loading false", () => {
-    vi.spyOn(global, "fetch").mockResolvedValue({
+  it("inicia a busca com products vazio e loading true", () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
       json: async () => [],
     } as Response);
 
     const { result } = renderHook(() => useProducts());
 
     expect(result.current.products).toEqual([]);
-    expect(result.current.loading).toBe(false);
+    expect(result.current.loading).toBe(true);
   });
 
   it("popula products após fetch bem-sucedido", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue({
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
       json: async () => mockProducts,
     } as Response);
 
@@ -50,12 +52,28 @@ describe("useProducts — unitário", () => {
   });
 
   it("mantém products vazio em caso de erro", async () => {
-    vi.spyOn(global, "fetch").mockRejectedValue(new Error("Network error"));
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("Network error"));
 
     const { result } = renderHook(() => useProducts());
 
     await waitFor(() => {
       expect(result.current.products).toEqual([]);
+      expect(result.current.error).toBe("Network error");
+    });
+  });
+
+  it("expõe error quando a API responde com erro", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: false,
+      json: async () => [],
+    } as Response);
+
+    const { result } = renderHook(() => useProducts());
+
+    await waitFor(() => {
+      expect(result.current.error).toBe(
+        "Nao foi possivel carregar os produtos.",
+      );
     });
   });
 });
@@ -64,7 +82,8 @@ describe("useProducts — unitário", () => {
 
 describe("useProducts — integração", () => {
   it("chama a URL correta", async () => {
-    const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValue({
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
       json: async () => mockProducts,
     } as Response);
 
@@ -76,7 +95,8 @@ describe("useProducts — integração", () => {
   });
 
   it("loading é false após o fetch finalizar", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue({
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
       json: async () => mockProducts,
     } as Response);
 

@@ -26,6 +26,11 @@ src/
 
 A arquitetura segue os princípios SOLID por feature, onde cada camada tem uma única responsabilidade — componentes cuidam da UI, hooks gerenciam estado, e services isolam as chamadas de API.
 
+## Estudos
+
+- [Filtro de busca com state lifting](docs/filtro-busca.md)
+- [Roadmap prático de Hooks no React](docs/hooks-roadmap.md)
+
 ## Como rodar
 
 ```bash

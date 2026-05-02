@@ -5,12 +5,12 @@ POST http://localhost:8082/products HTTP/1.1
 Content-Type: application/json
 
 {
-    "productName": "model de internet",
-    "category": "tech",
+    "productName": "cabo de internet",
+    "category": "tecnologia",
     "price": 10.0
 }
 
 ###
 
-DELETE  http://localhost:8082/products/7f07f4ca-abfe-4616-8d5f-62c304adbcf8 HTTP/1.1
+DELETE  http://localhost:8082/products/7d6bb612-03cd-441e-b8b6-98895cad84a5 HTTP/1.1
 Content-Type: application/json

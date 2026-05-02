@@ -9,10 +9,12 @@ const useFilterProducts = () => {
       try {
         const response = await fetch("api/products");
         const data: Product[] = await response.json();
-        const filterByTech = data.filter(
-          (product) => product.category === "tech",
+        const filterByCategory = data.filter((product) =>
+          product.category
+            .toLowerCase()
+            .includes(product.category.toLowerCase()),
         );
-        setFilterProducts(filterByTech);
+        setFilterProducts(filterByCategory);
       } catch (error) {
         console.error(error);
       }

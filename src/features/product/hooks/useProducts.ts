@@ -1,26 +1,41 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Product } from "../types";
 
 const useProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await fetch("api/products");
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+  const fetchProduct = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch("api/products");
+
+      if (!response.ok) {
+        throw new Error("Nao foi possivel carregar os produtos.");
       }
-    };
-    fetchProduct();
+
+      const data: Product[] = await response.json();
+      setProducts(data);
+    } catch (error) {
+      setProducts([]);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Nao foi possivel carregar os produtos.",
+      );
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { loading, products };
+  useEffect(() => {
+    fetchProduct();
+  }, [fetchProduct]);
+
+  return { loading, products, error, refetch: fetchProduct };
 };
 
 export default useProducts;
